@@ -15,10 +15,8 @@ public class MFNaivePlayer extends Player {
     private final Random random = new Random(0xdeadbeef);
 
     private static Color getOpponentColor(Color col) {
-        if (Color.PLAYER1 == col)
-            return Color.PLAYER1;
-        else
-            return Color.PLAYER2;
+        if (Color.PLAYER1 == col) return Color.PLAYER1;
+        else return Color.PLAYER2;
     }
 
     @Override
