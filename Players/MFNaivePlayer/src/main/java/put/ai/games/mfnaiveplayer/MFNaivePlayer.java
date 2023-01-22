@@ -14,14 +14,19 @@ import java.util.Random;
 
 public class MFNaivePlayer extends Player {
 
-    private Random random = new Random(0xdeadbeef);
+    private final Random random = new Random(0xdeadbeef);
 
+    private static Color getOpponentColor(Color col) {
+        if (Color.PLAYER1 == col)
+            return Color.PLAYER1;
+        else
+            return Color.PLAYER2;
+    }
 
     @Override
     public String getName() {
         return "Mikołaj Felczyński 147400";
     }
-
 
     @Override
     public Move nextMove(Board b) {
@@ -35,19 +40,18 @@ public class MFNaivePlayer extends Player {
         List<Move> usedMoves = new ArrayList<>();
         // zastosowanie ruchu na zapasowej tablicy
         bClone.doMove(initMove);
-        if (bClone.getMovesFor(MFNaivePlayer.getOpponent()) < moves.size()) {
+        if (bClone.getMovesFor(MFNaivePlayer.getOpponent(getOpponentColor(getColor()))).size() < b.getMovesFor(MFNaivePlayer.getOpponent(getOpponentColor(getColor()))).size()) {
             return initMove;
         } else {
             usedMoves.add(initMove);
             Move newMove;
-            do  {
+            do {
                 newMove = bCloneMoves.get(random.nextInt(bCloneMoves.size()));
-            }
-            while (usedMoves.contains(newMove));
+            } while (usedMoves.contains(newMove));
 
         }
 
 
         return moves.get(random.nextInt(moves.size()));
-}
+    }
 }
