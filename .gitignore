@@ -1,0 +1,12 @@
+# Project exclude paths
+/BoardGame/target/
+/BoardGameEngine/target/
+/CLI/target/
+/GUI/target/
+/Players/MFNaivePlayer/target/
+/Players/NaivePlayer/target/
+/Players/NastyPlayer/target/
+/Players/NullPlayer/target/
+/Rules/Migration/target/
+/RulesProvider/target/
+/Tester/target/
