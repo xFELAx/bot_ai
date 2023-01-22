@@ -11,7 +11,7 @@ import put.ai.games.game.Player;
 import java.util.*;
 
 public class MFNaivePlayer extends Player {
-
+    private static final int DIFF_TIME = 100;
     private final Random random = new Random(0xdeadbeef);
 
 
@@ -23,7 +23,9 @@ public class MFNaivePlayer extends Player {
 
     @Override
     public Move nextMove(Board b) {
+        long startTime = System.nanoTime();
         List<Move> moves = b.getMovesFor(getColor());
+//System.out.println("GETTIME "+getTime());
 
         // skopiowanie tablicy
 
@@ -34,38 +36,31 @@ public class MFNaivePlayer extends Player {
             Board bClone = b.clone();
             bClone.doMove(m);
             calculatedMoves.put(m, bClone.getMovesFor(MFNaivePlayer.getOpponent(getColor())).size());
-        }
-        Integer minVal = Collections.min(calculatedMoves.values());
-
-        for (Map.Entry<Move, Integer> entry : calculatedMoves.entrySet()) {
-            if (entry.getValue() == minVal) {
-                System.out.println("OK");
-                return entry.getKey();
+            if ((System.nanoTime() - startTime)<(getTime()-DIFF_TIME)) {
+          //      System.out.println("OK1 "+getTime());
+                return moves.get(random.nextInt(moves.size()));
             }
         }
-        System.out.println("Moves {} calculatedMoves {} " + moves.size() + " " + calculatedMoves.size());
-        return null;
-    /*
-
-                 // wyszukiwanie ruchu w tablicy przejrzanych ruchów
-        for (Move m : moves) {
-            if (calculatedMoves.containsKey(m)) {
-        List<Move> usedMoves = new ArrayList<>();
-        // zastosowanie ruchu na zapasowej tablicy
-        bClone.doMove(initMove);
-        if (bClone.getMovesFor(MFNaivePlayer.getOpponent(getOpponentColor(getColor()))).size() < b.getMovesFor(MFNaivePlayer.getOpponent(getOpponentColor(getColor()))).size()) {
-            return initMove;
-        } else {
-            usedMoves.add(initMove);
-            Move newMove;
-            do {
-                newMove = bCloneMoves.get(random.nextInt(bCloneMoves.size()));
-            } while (usedMoves.contains(newMove));
-
+        Integer minVal = Collections.min(calculatedMoves.values());
+        Map.Entry<Move, Integer> minMove = null;
+        for (Map.Entry<Move, Integer> entry : calculatedMoves.entrySet()) {
+            if (minMove == null) {
+                minMove = entry;
+            }
+            if (entry.getValue().equals(minVal)) {
+                //System.out.println("OK2");
+                return entry.getKey();
+            }
+            if (minMove.getValue() > entry.getValue()) {
+                minMove = entry;
+            }
+            if ((System.nanoTime() - startTime)<(getTime()-DIFF_TIME)) {
+                //System.out.println("OK3");
+                return minMove.getKey();
+            }
         }
-
+        //System.out.println("GETTIME2 "+getTime());
 
         return moves.get(random.nextInt(moves.size()));
-    }*/
     }
 }
