@@ -14,10 +14,7 @@ public class MFNaivePlayer extends Player {
 
     private final Random random = new Random(0xdeadbeef);
 
-    private static Color getOpponentColor(Color col) {
-        if (Color.PLAYER1 == col) return Color.PLAYER1;
-        else return Color.PLAYER2;
-    }
+
 
     @Override
     public String getName() {
@@ -36,15 +33,17 @@ public class MFNaivePlayer extends Player {
         for (Move m : moves) {
             Board bClone = b.clone();
             bClone.doMove(m);
-            calculatedMoves.put(m, bClone.getMovesFor(MFNaivePlayer.getOpponent(getOpponentColor(getColor()))).size());
+            calculatedMoves.put(m, bClone.getMovesFor(MFNaivePlayer.getOpponent(getColor())).size());
         }
         Integer minVal = Collections.min(calculatedMoves.values());
 
         for (Map.Entry<Move, Integer> entry : calculatedMoves.entrySet()) {
             if (entry.getValue() == minVal) {
+                System.out.println("OK");
                 return entry.getKey();
             }
         }
+        System.out.println("Moves {} calculatedMoves {} " + moves.size() + " " + calculatedMoves.size());
         return null;
     /*
 
