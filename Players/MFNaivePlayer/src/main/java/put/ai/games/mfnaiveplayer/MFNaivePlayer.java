@@ -8,9 +8,7 @@ import put.ai.games.game.Board;
 import put.ai.games.game.Move;
 import put.ai.games.game.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class MFNaivePlayer extends Player {
 
@@ -31,12 +29,30 @@ public class MFNaivePlayer extends Player {
     @Override
     public Move nextMove(Board b) {
         List<Move> moves = b.getMovesFor(getColor());
-        Board bClone = b.clone();
+
         // skopiowanie tablicy
-        List<Move> bCloneMoves = bClone.getMovesFor(getColor());
+
         // wybranie losowego ruchu
-        Move initMove = bCloneMoves.get(random.nextInt(bCloneMoves.size()));
         // stworzenie tablicy przejrzanych ruchów
+        Map<Move, Integer> calculatedMoves = new HashMap<>();
+        for (Move m : moves) {
+            Board bClone = b.clone();
+            bClone.doMove(m);
+            calculatedMoves.put(m, bClone.getMovesFor(MFNaivePlayer.getOpponent(getOpponentColor(getColor()))).size());
+        }
+        Integer minVal = Collections.min(calculatedMoves.values());
+
+        for (Map.Entry<Move, Integer> entry : calculatedMoves.entrySet()) {
+            if (entry.getValue() == minVal) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    /*
+
+                 // wyszukiwanie ruchu w tablicy przejrzanych ruchów
+        for (Move m : moves) {
+            if (calculatedMoves.containsKey(m)) {
         List<Move> usedMoves = new ArrayList<>();
         // zastosowanie ruchu na zapasowej tablicy
         bClone.doMove(initMove);
@@ -53,5 +69,6 @@ public class MFNaivePlayer extends Player {
 
 
         return moves.get(random.nextInt(moves.size()));
+    }*/
     }
 }
